@@ -1,8 +1,6 @@
 package commons;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,15 +47,8 @@ public class ImageResizer {
 	 */
 	public static void main(String[] args) {
 		
-		//todo (TEMPORARY) Make program function by piping in cURL command output
-		File issues = new File("/Users/shusen/Desktop/CommonsIssues.txt");
-		Scanner fileReader = null;
-		try {
-			fileReader = new Scanner(issues);
-		} catch (FileNotFoundException e) {
-			System.out.println("Error: Could not read from specified file");
-			e.printStackTrace();
-		}
+		//Establishes input Scanner used to read piped-in cURL output
+		Scanner fileReader = new Scanner(System.in);
 		
 		/**
 		 * Following 6 lines initialize variables necessary for properly parsing text input and
@@ -100,6 +91,7 @@ public class ImageResizer {
 				i++;
 			}
 		}
+		fileReader.close();
 		
 		//Prints the contents of the 2D array of Issue information for testing purposes
 		for (int j = 0; j < issueCount; j++) {
