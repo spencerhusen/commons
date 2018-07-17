@@ -1,9 +1,11 @@
 package commons;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
@@ -44,8 +46,9 @@ public class ImageResizer {
 	 * Main method; contains most critical functionality of program including establishing
 	 * Scanner for piped input and extracting critical body information from cURL output
 	 * @param args command line arguments
+	 * @throws IOException if the appending operation fails
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		//Establishes input Scanner used to read piped-in cURL output
 		Scanner fileReader = new Scanner(System.in);
@@ -94,28 +97,33 @@ public class ImageResizer {
 		fileReader.close();
 		
 		//Prints the contents of the 2D array of Issue information for testing purposes
-		for (int j = 0; j < issueCount; j++) {
-			for (int k = 0; k < ISSUE_DATA; k++) {
-				System.out.println(companyInfo[j][k]);
-			}
-		}
+		System.out.print("\nProcess Complete.\n");
 		
 		/**
 		 * Begins to test the process of appending extracted information to master
 		 * 'participants.yml' file
 		 */
-		PrintWriter out = null;
+		BufferedWriter out = null;
+		File f = new File("/Users/shusen/Desktop/TestAppending.txt");
 		try {
-			out = new PrintWriter(new FileWriter("/Users/shusen/Desktop/TestOutput.txt"), true);
+			out = new BufferedWriter(new FileWriter(f, true));
 		} catch (IOException e) {
 			System.out.println("Error: Could not write to specified file");
 			e.printStackTrace();
 		}
+		out.append("\n");
 		for (int x = 0; x < issueCount; x++) {
 			for (int y = 0; y < ISSUE_DATA; y++) {
-				out.println(companyInfo[x][y]);
+				if (y == 0) {
+					out.append("- name: \"" + companyInfo[x][y] + "\"");
+				} else if (y == 1) {
+					out.append("  link: \"" + companyInfo[x][y] + "\"");
+				} else {
+					out.append("  logo: \"" + companyInfo[x][y] + "\"");
+				}
 			}
 		}
+		out.close();
 		
 		/**
 		 * For each issue, passes the URL of the company's logo file to be resized and uploaded
