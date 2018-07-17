@@ -96,13 +96,7 @@ public class ImageResizer {
 		}
 		fileReader.close();
 		
-		//Prints the contents of the 2D array of Issue information for testing purposes
-		System.out.print("\nProcess Complete.\n");
-		
-		/**
-		 * Begins to test the process of appending extracted information to master
-		 * 'participants.yml' file
-		 */
+		//Appends the appropriate extracted information to the 'participants.yml' file
 		BufferedWriter out = null;
 		File f = new File("/Users/shusen/Desktop/TestAppending.txt");
 		try {
@@ -111,18 +105,22 @@ public class ImageResizer {
 			System.out.println("Error: Could not write to specified file");
 			e.printStackTrace();
 		}
-		out.append("\n");
 		for (int x = 0; x < issueCount; x++) {
 			for (int y = 0; y < ISSUE_DATA; y++) {
 				if (y == 0) {
 					out.append("- name: \"" + companyInfo[x][y] + "\"");
+					out.newLine();
 				} else if (y == 1) {
 					out.append("  link: \"" + companyInfo[x][y] + "\"");
+					out.newLine();
 				} else {
 					out.append("  logo: \"" + companyInfo[x][y] + "\"");
+					out.newLine();
 				}
 			}
 		}
+		
+		//Closes FileWriter
 		out.close();
 		
 		/**
