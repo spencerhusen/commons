@@ -1,11 +1,12 @@
 package commons;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
@@ -138,19 +139,42 @@ public class ImageResizer {
 	 * @param logoUrl the String representing the URL of where each company's logo is located online
 	 */
 	public static void resizeImage(String logoUrl) {
-		BufferedImage logo = null;
+		Image logo = null;
 		try {
-			URL imageURL = new URL(logoUrl);
-			try {
-				logo = ImageIO.read(imageURL);
-			} catch (IOException e) {
-				System.out.println("Invalid URL");
-				e.printStackTrace();
-			} 
-		} catch (MalformedURLException e) {
-			System.out.println("Invalid URL");
-			e.printStackTrace();
+			URL url = new URL(logoUrl);
+			logo = ImageIO.read(url);
+		} catch (IOException e) {
+			System.out.println("Unable to read the image at the specified URL");
 		}
+		//BufferedImage finalLogo = logo;
+		
+	}
+	
+	/**
+	 * CODE from Java Game Engine (https://code.google.com/archive/p/game-engine-for-java/source#31)
+	 * 
+	 * Converts a given Image into a BufferedImage
+	 *
+	 * @param img The Image to be converted
+	 * @return The converted BufferedImage
+	 */
+	public static BufferedImage toBufferedImage(Image img)
+	{
+	    if (img instanceof BufferedImage)
+	    {
+	        return (BufferedImage) img;
+	    }
+
+	    // Create a buffered image with transparency
+	    BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+	    // Draw the image on to the buffered image
+	    Graphics2D bGr = bimage.createGraphics();
+	    bGr.drawImage(img, 0, 0, null);
+	    bGr.dispose();
+
+	    // Return the buffered image
+	    return bimage;
 	}
 	
 }
