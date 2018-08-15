@@ -50,7 +50,7 @@ public class ImageResizer {
 	private static final int ISSUE_FLAG_START = 9;
 
 	/** String located in GitHub issues for any piece of information*/
-	private static final String ISSUE_SKIP_FLAG = "TBD";
+	private static final String ISSUE_SKIP_FLAG = " TBD";
 	
 	/** Maximum pixel width for uploaded company logo */
 	private static final float MAX_HEIGHT = 60;
@@ -130,16 +130,18 @@ public class ImageResizer {
 					}
 					Scanner participantsReader = new Scanner(new File(COMMONS_PATH
 							+ "/data/participants.yml"));
+					
 					//Checks for duplicate and checks to see if any field is "TBD"
 					while (participantsReader.hasNextLine()) {
 						ymlLine = participantsReader.nextLine();
-						if (ymlLine.contains(company) || (company.equalsIgnoreCase(ISSUE_SKIP_FLAG))
-								|| (url.equalsIgnoreCase(ISSUE_SKIP_FLAG))
-								|| (link.equalsIgnoreCase(ISSUE_SKIP_FLAG))) {
+						if ((ymlLine.contains(company)) || (bodyLine.contains(ISSUE_SKIP_FLAG))) {
 							addIssue = false;
+						} else {
+							addIssue = true;
 						}
 					}
 					participantsReader.close();
+					
 					if (addIssue) {
 						String extension = getExtension(link);
 						//If SVG file, does not resize image and vice-a-versa
@@ -171,7 +173,7 @@ public class ImageResizer {
 		 */
 		inputReader.close();
 		System.out.println();
-		if (companiesAdded) {
+		if (!companiesAdded) {
 			System.out.println("No new companies added.\n");
 		}
 		out.close();
@@ -180,8 +182,8 @@ public class ImageResizer {
 	/**
 	 * Static method simply responsible for determining the file extension of the picture file
 	 * going to be used as the company's logo on the website
-	 * @param logo the url of the image thats extension is to be determined
-	 * @return the proper extension of the file
+	 * @param img the name of the image file whose extension is to be retrieved
+	 * @return the file extension of the image at the URL
 	 */
 	public static String getExtension(String img) {
 		return img.substring(img.lastIndexOf(".") + 1);
@@ -265,6 +267,7 @@ public class ImageResizer {
 			System.out.println("Error: Invalid URL");
 			e.printStackTrace();
 		}
+		
 		File svgFile = new File(COMMONS_PATH + "/source/img/commons-logos/" +
 				company.toLowerCase().replaceAll("\\s","") + ".svg");
 		try {
